@@ -119,16 +119,20 @@ function handleInput(e) {
     displayLoader(imagesRoot);
 
     errorMessage.textContent = "";
-    fetch2(imgSearchUrl(searchBox.value)).then((imagesData) => {
-      if (imagesData.results.length === 0) {
+    fetch2(imgSearchUrl(searchBox.value))
+      .then((imagesData) => {
+        if (imagesData.results.length === 0) {
+          message.style.display = "none";
+          displayError("No Images found!");
+          return;
+        }
+        displayImages(imagesData.results);
         message.style.display = "none";
-        displayError("No Images found!");
-        return;
-      }
-      displayImages(imagesData.results);
-      message.style.display = "none";
-      loadMoreBtn.style.display = "block";
-    });
+        loadMoreBtn.style.display = "block";
+      })
+      .catch((error) => {
+        displayError(error);
+      });
 
     queryValue = searchBox.value;
     searchBox.value = "";
